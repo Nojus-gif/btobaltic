@@ -4,912 +4,348 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>BTOBaltic – Baltijos B2B Duomenų Bazė</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0a0f0d;
-    --surface: #111810;
-    --card: #161e14;
-    --accent: #a8e63d;
-    --accent2: #5dba47;
-    --text: #e8f0e4;
-    --muted: #6b7d65;
-    --border: #1f2b1c;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 300;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* GRID TEXTURE */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(168,230,61,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(168,230,61,0.03) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 48px;
-    background: rgba(10,15,13,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .logo {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: 20px;
-    letter-spacing: -0.5px;
-    color: var(--text);
-  }
-
-  .logo span { color: var(--accent); }
-
-  nav a {
-    color: var(--muted);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 400;
-    transition: color 0.2s;
-  }
-  nav a:hover { color: var(--accent); }
-
-  .nav-cta {
-    background: var(--accent);
-    color: var(--bg) !important;
-    padding: 8px 20px;
-    border-radius: 6px;
-    font-weight: 500 !important;
-    font-size: 14px;
-    transition: opacity 0.2s !important;
-  }
-  .nav-cta:hover { opacity: 0.85; }
-
-  /* HERO */
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding: 120px 48px 80px;
-    z-index: 1;
-  }
-
-  .hero-glow {
-    position: absolute;
-    top: 20%;
-    right: -10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, rgba(168,230,61,0.08) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .hero-content { max-width: 700px; }
-
-  .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: rgba(168,230,61,0.08);
-    border: 1px solid rgba(168,230,61,0.2);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 6px 14px;
-    border-radius: 100px;
-    margin-bottom: 32px;
-  }
-
-  .badge::before {
-    content: '';
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 2s infinite;
-  }
-
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(0.8); }
-  }
-
-  h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(42px, 6vw, 72px);
-    line-height: 1.05;
-    letter-spacing: -2px;
-    margin-bottom: 24px;
-  }
-
-  h1 em {
-    font-style: normal;
-    color: var(--accent);
-  }
-
-  .hero-sub {
-    font-size: 18px;
-    color: var(--muted);
-    max-width: 520px;
-    margin-bottom: 48px;
-    line-height: 1.7;
-  }
-
-  .hero-form {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .hero-form input {
-    background: var(--card);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 14px 20px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    width: 300px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .hero-form input::placeholder { color: var(--muted); }
-  .hero-form input:focus { border-color: rgba(168,230,61,0.4); }
-
-  .btn-primary {
-    background: var(--accent);
-    color: var(--bg);
-    border: none;
-    padding: 14px 28px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.2s, transform 0.2s;
-    white-space: nowrap;
-  }
-
-  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
-
-  .hero-note {
-    margin-top: 16px;
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  /* STATS */
-  .stats {
-    position: relative;
-    z-index: 1;
-    padding: 0 48px 100px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1px;
-    background: var(--border);
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .stat {
-    background: var(--bg);
-    padding: 40px 48px;
-    text-align: center;
-  }
-
-  .stat-num {
-    font-family: 'Syne', sans-serif;
-    font-size: 42px;
-    font-weight: 800;
-    color: var(--accent);
-    letter-spacing: -2px;
-    display: block;
-  }
-
-  .stat-label {
-    font-size: 13px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 4px;
-  }
-
-  /* SECTION */
-  section {
-    position: relative;
-    z-index: 1;
-    padding: 100px 48px;
-  }
-
-  .section-tag {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 16px;
-  }
-
-  h2 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: clamp(28px, 4vw, 44px);
-    letter-spacing: -1.5px;
-    line-height: 1.1;
-    margin-bottom: 16px;
-  }
-
-  .section-sub {
-    color: var(--muted);
-    font-size: 17px;
-    max-width: 480px;
-    margin-bottom: 60px;
-    line-height: 1.7;
-  }
-
-  /* PROBLEM/SOLUTION */
-  .two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    max-width: 900px;
-  }
-
-  .col-panel {
-    background: var(--card);
-    padding: 40px;
-  }
-
-  .col-panel h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 18px;
-    font-weight: 700;
-    margin-bottom: 20px;
-    letter-spacing: -0.5px;
-  }
-
-  .col-panel.bad h3 { color: #ff6b6b; }
-  .col-panel.good h3 { color: var(--accent); }
-
-  .col-panel ul {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .col-panel li {
-    font-size: 14px;
-    color: var(--muted);
-    padding-left: 20px;
-    position: relative;
-    line-height: 1.5;
-  }
-
-  .col-panel.bad li::before {
-    content: '✕';
-    position: absolute;
-    left: 0;
-    color: #ff6b6b;
-    font-size: 12px;
-  }
-
-  .col-panel.good li::before {
-    content: '✓';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-size: 12px;
-  }
-
-  /* FEATURES */
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 16px;
-    max-width: 1100px;
-  }
-
-  .feature-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 32px;
-    transition: border-color 0.2s, transform 0.2s;
-  }
-
-  .feature-card:hover {
-    border-color: rgba(168,230,61,0.3);
-    transform: translateY(-2px);
-  }
-
-  .feature-icon {
-    width: 44px;
-    height: 44px;
-    background: rgba(168,230,61,0.1);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    margin-bottom: 20px;
-  }
-
-  .feature-card h3 {
-    font-family: 'Syne', sans-serif;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 8px;
-    letter-spacing: -0.3px;
-  }
-
-  .feature-card p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.6;
-  }
-
-  /* PRICING */
-  .pricing-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    max-width: 900px;
-  }
-
-  .price-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 32px;
-    position: relative;
-    transition: border-color 0.2s;
-  }
-
-  .price-card.featured {
-    border-color: rgba(168,230,61,0.4);
-    background: linear-gradient(135deg, rgba(168,230,61,0.05), var(--card));
-  }
-
-  .price-badge {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--accent);
-    color: var(--bg);
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    padding: 4px 12px;
-    border-radius: 100px;
-  }
-
-  .price-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 12px;
-  }
-
-  .price-amount {
-    font-family: 'Syne', sans-serif;
-    font-size: 40px;
-    font-weight: 800;
-    letter-spacing: -2px;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .price-amount span {
-    font-size: 18px;
-    font-weight: 400;
-    color: var(--muted);
-  }
-
-  .price-period {
-    font-size: 13px;
-    color: var(--muted);
-    margin-bottom: 24px;
-  }
-
-  .price-divider {
-    height: 1px;
-    background: var(--border);
-    margin-bottom: 24px;
-  }
-
-  .price-features {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 28px;
-  }
-
-  .price-features li {
-    font-size: 13px;
-    color: var(--muted);
-    padding-left: 18px;
-    position: relative;
-  }
-
-  .price-features li::before {
-    content: '→';
-    position: absolute;
-    left: 0;
-    color: var(--accent);
-    font-size: 11px;
-    top: 1px;
-  }
-
-  .btn-outline {
-    width: 100%;
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-    padding: 12px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-  }
-
-  .btn-outline:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
-  .price-card.featured .btn-outline {
-    background: var(--accent);
-    color: var(--bg);
-    border-color: var(--accent);
-    font-weight: 500;
-  }
-
-  .price-card.featured .btn-outline:hover { opacity: 0.85; }
-
-  /* WHO */
-  .who-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    max-width: 800px;
-  }
-
-  .who-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 24px;
-    text-align: center;
-    transition: border-color 0.2s;
-  }
-
-  .who-card:hover { border-color: rgba(168,230,61,0.3); }
-
-  .who-icon { font-size: 28px; margin-bottom: 10px; }
-
-  .who-card p {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.4;
-  }
-
-  /* CTA */
-  .cta-section {
-    padding: 100px 48px;
-    text-align: center;
-  }
-
-  .cta-box {
-    max-width: 600px;
-    margin: 0 auto;
-    background: var(--card);
-    border: 1px solid rgba(168,230,61,0.2);
-    border-radius: 20px;
-    padding: 64px 48px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .cta-box::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 300px;
-    height: 300px;
-    background: radial-gradient(circle, rgba(168,230,61,0.06), transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-box h2 {
-    font-size: clamp(24px, 4vw, 36px);
-    margin-bottom: 12px;
-  }
-
-  .cta-box p {
-    color: var(--muted);
-    margin-bottom: 36px;
-    font-size: 16px;
-  }
-
-  .cta-form {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .cta-form input {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 13px 18px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    width: 260px;
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
-  .cta-form input:focus { border-color: rgba(168,230,61,0.4); }
-  .cta-form input::placeholder { color: var(--muted); }
-
-  /* FOOTER */
-  footer {
-    position: relative;
-    z-index: 1;
-    border-top: 1px solid var(--border);
-    padding: 32px 48px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
-  footer p {
-    font-size: 13px;
-    color: var(--muted);
-  }
-
-  .flags { font-size: 18px; letter-spacing: 4px; }
-
-  /* ANIMATIONS */
-  .fade-in {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-
-  .fade-in.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* THANK YOU STATE */
-  .thank-you {
-    display: none;
-    color: var(--accent);
-    font-size: 15px;
-    font-weight: 500;
-    margin-top: 12px;
-  }
-
-  @media (max-width: 768px) {
-    nav { padding: 16px 24px; }
-    .hero, section, .cta-section { padding-left: 24px; padding-right: 24px; }
-    .stats { padding: 0; }
-    .stat { padding: 32px 24px; }
-    .two-col { grid-template-columns: 1fr; }
-    footer { padding: 24px; flex-direction: column; text-align: center; }
-    .hero-form { flex-direction: column; }
-    .hero-form input { width: 100%; }
-  }
+:root {
+  --bg: #fafaf8;
+  --ink: #0e0e0c;
+  --ink2: #3a3a36;
+  --muted: #8a8a82;
+  --border: #e4e4dc;
+  --surface: #f2f2ee;
+  --accent: #1a5cff;
+  --accent-soft: #eef2ff;
+  --accent-mid: #b8c8ff;
+  --green: #16a34a;
+  --red: #dc2626;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Geist',sans-serif;font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;background:rgba(255,255,255,0.9);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:100px;padding:8px 8px 8px 24px;box-shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 20px rgba(0,0,0,0.04);white-space:nowrap;gap:0}
+.logo-nav{font-weight:600;font-size:15px;letter-spacing:-0.3px;color:var(--ink);margin-right:28px}
+.logo-nav em{font-style:normal;color:var(--accent)}
+.nav-links{display:flex;gap:2px;margin-right:10px}
+.nav-links a{color:var(--ink2);text-decoration:none;font-size:14px;padding:7px 14px;border-radius:100px;transition:background .15s,color .15s}
+.nav-links a:hover{background:var(--surface);color:var(--ink)}
+.nav-cta{background:var(--ink);color:#fff;padding:9px 20px;border-radius:100px;font-size:14px;font-weight:500;text-decoration:none;transition:opacity .15s,transform .15s;display:inline-block}
+.nav-cta:hover{opacity:.82;transform:scale(.98)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;position:relative}
+.blur1{position:absolute;top:10%;left:15%;width:500px;height:500px;background:radial-gradient(circle,rgba(26,92,255,.07),transparent 70%);filter:blur(40px);pointer-events:none}
+.blur2{position:absolute;bottom:15%;right:10%;width:400px;height:400px;background:radial-gradient(circle,rgba(22,163,74,.06),transparent 70%);filter:blur(40px);pointer-events:none}
+.eyebrow-pill{display:inline-flex;align-items:center;gap:8px;background:var(--accent-soft);border:1px solid var(--accent-mid);color:var(--accent);font-size:12px;font-weight:500;padding:5px 14px 5px 8px;border-radius:100px;margin-bottom:28px;animation:fadeUp .6s ease both}
+.eyebrow-pill .dot{width:20px;height:20px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff}
+h1{font-family:'Instrument Serif',Georgia,serif;font-weight:400;font-size:clamp(44px,7vw,80px);line-height:1.02;letter-spacing:-.02em;color:var(--ink);max-width:840px;margin:0 auto 24px;animation:fadeUp .6s .1s ease both}
+h1 em{font-style:italic;color:var(--accent)}
+.hero-sub{font-size:17px;color:var(--muted);max-width:460px;margin:0 auto 44px;line-height:1.65;animation:fadeUp .6s .2s ease both}
+.hero-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;animation:fadeUp .6s .3s ease both}
+.hero-form input{background:#fff;border:1px solid var(--border);color:var(--ink);padding:13px 18px;border-radius:12px;font-family:'Geist',sans-serif;font-size:15px;width:280px;outline:none;box-shadow:0 1px 2px rgba(0,0,0,.04);transition:border-color .15s,box-shadow .15s}
+.hero-form input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,92,255,.1)}
+.hero-form input::placeholder{color:#c0c0b8}
+.btn-primary{background:var(--accent);color:#fff;border:none;padding:13px 24px;border-radius:12px;font-family:'Geist',sans-serif;font-size:15px;font-weight:500;cursor:pointer;transition:opacity .15s,transform .15s,box-shadow .15s;box-shadow:0 1px 2px rgba(26,92,255,.2),0 4px 14px rgba(26,92,255,.28);white-space:nowrap}
+.btn-primary:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 2px 4px rgba(26,92,255,.2),0 8px 24px rgba(26,92,255,.32)}
+.hero-note{margin-top:14px;font-size:12.5px;color:#b8b8b0;animation:fadeUp .6s .4s ease both}
+.thank-you{display:none;color:var(--green);font-size:14px;font-weight:500;margin-top:12px}
+
+/* SOCIAL PROOF */
+.proof{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:52px;animation:fadeUp .6s .5s ease both}
+.avatars{display:flex}
+.av{width:30px;height:30px;border-radius:50%;border:2px solid #fff;margin-left:-8px;font-size:11px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600}
+.av:first-child{margin-left:0;background:linear-gradient(135deg,#f093fb,#f5576c)}
+.av:nth-child(2){background:linear-gradient(135deg,#4facfe,#00f2fe)}
+.av:nth-child(3){background:linear-gradient(135deg,#43e97b,#38f9d7)}
+.proof-text{font-size:13px;color:var(--muted);line-height:1.4}
+.proof-text strong{color:var(--ink);font-weight:500}
+.stars{color:#f59e0b;font-size:11px;letter-spacing:1px}
+
+/* STATS */
+.stats-bar{border-top:1px solid var(--border);border-bottom:1px solid var(--border);display:grid;grid-template-columns:repeat(4,1fr);background:#fff}
+.stat-item{padding:28px 32px;text-align:center;border-right:1px solid var(--border);position:relative}
+.stat-item:last-child{border-right:none}
+.stat-item::after{content:'';position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:0;height:2px;background:var(--accent);border-radius:2px;transition:width .3s}
+.stat-item:hover::after{width:40px}
+.stat-n{font-family:'Instrument Serif',serif;font-size:36px;line-height:1;color:var(--ink);display:block;margin-bottom:4px}
+.stat-l{font-size:12px;color:var(--muted);letter-spacing:.2px}
+
+/* LAYOUT */
+.page-section{padding:96px 24px;max-width:1120px;margin:0 auto}
+.alt-bg{background:#fff;border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.alt-bg .page-section{max-width:none}
+.alt-bg .inner{max-width:1120px;margin:0 auto;padding:96px 24px}
+.eyebrow{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:block}
+h2{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(28px,4vw,44px);letter-spacing:-.02em;line-height:1.1;margin-bottom:14px;color:var(--ink)}
+.sec-sub{color:var(--muted);font-size:16px;max-width:440px;line-height:1.65;margin-bottom:52px}
+
+/* COMPARISON */
+.compare-wrap{border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.04),0 4px 20px rgba(0,0,0,.03);max-width:820px}
+.cmp-head{display:grid;grid-template-columns:1.2fr 1fr 1fr;background:var(--surface);border-bottom:1px solid var(--border)}
+.cmp-head>div{padding:16px 24px;font-size:13px;font-weight:600;color:var(--ink2);border-right:1px solid var(--border)}
+.cmp-head>div:last-child{border-right:none;color:var(--accent)}
+.cmp-head>div:first-child{color:var(--muted);font-weight:400}
+.cmp-row{display:grid;grid-template-columns:1.2fr 1fr 1fr;border-bottom:1px solid var(--border);transition:background .15s}
+.cmp-row:last-child{border-bottom:none}
+.cmp-row:hover{background:#fafaf8}
+.cmp-row>div{padding:13px 24px;font-size:14px;color:var(--ink2);border-right:1px solid var(--border);display:flex;align-items:center;gap:7px}
+.cmp-row>div:last-child{border-right:none;background:rgba(26,92,255,.015)}
+.cmp-row>div:first-child{color:var(--muted);font-size:13px}
+.ok{color:var(--green);font-weight:700}
+.no{color:var(--red)}
+.eh{color:#d97706}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.feat-card{background:#fff;padding:32px;transition:background .15s}
+.feat-card:hover{background:var(--surface)}
+.feat-num{font-family:'Instrument Serif',serif;font-size:13px;color:var(--accent);margin-bottom:16px;display:block;letter-spacing:.3px}
+.feat-card h3{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--ink);letter-spacing:-.2px}
+.feat-card p{font-size:13.5px;color:var(--muted);line-height:1.6}
+
+/* WHO */
+.who-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:720px}
+.who-pill{display:flex;align-items:center;gap:12px;padding:15px 20px;background:#fff;border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--ink2);transition:border-color .15s,box-shadow .15s}
+.who-pill:hover{border-color:var(--accent-mid);box-shadow:0 0 0 3px var(--accent-soft)}
+.who-pill span:first-child{font-size:18px}
+
+/* PRICING */
+.price-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.price-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:28px 22px;position:relative;transition:box-shadow .2s,transform .2s}
+.price-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.07);transform:translateY(-2px)}
+.price-card.hot{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),0 4px 24px rgba(26,92,255,.1)}
+.hot-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:11px;font-weight:600;letter-spacing:.5px;padding:3px 12px;border-radius:0 0 8px 8px}
+.plan-name{font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;margin-top:8px}
+.plan-price{font-family:'Instrument Serif',serif;font-size:46px;line-height:1;color:var(--ink);letter-spacing:-.02em;margin-bottom:4px}
+.plan-price sub{font-size:16px;font-family:'Geist',sans-serif;font-weight:300;color:var(--muted);vertical-align:middle}
+.plan-period{font-size:13px;color:var(--muted);margin-bottom:20px}
+.plan-divider{height:1px;background:var(--border);margin:18px 0}
+.plan-feats{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:22px}
+.plan-feats li{font-size:13px;color:var(--ink2);display:flex;align-items:center;gap:8px}
+.plan-feats li::before{content:'✓';color:var(--green);font-weight:700;font-size:11px;flex-shrink:0}
+.btn-plan{width:100%;padding:11px;border-radius:10px;font-family:'Geist',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid var(--border);background:var(--surface);color:var(--ink)}
+.btn-plan:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.price-card.hot .btn-plan{background:var(--accent);color:#fff;border-color:var(--accent)}
+.price-card.hot .btn-plan:hover{opacity:.88}
+
+/* CTA */
+.cta-section{background:var(--ink);padding:100px 24px;text-align:center;position:relative;overflow:hidden}
+.cta-section::before{content:'';position:absolute;top:-40%;left:50%;transform:translateX(-50%);width:600px;height:600px;background:radial-gradient(circle,rgba(26,92,255,.18),transparent 70%);pointer-events:none}
+.cta-inner{max-width:520px;margin:0 auto;position:relative}
+.cta-section h2{color:#fff;margin-bottom:12px}
+.cta-section .sec-sub{color:rgba(255,255,255,.45);margin:0 auto 36px;max-width:380px}
+.cta-form{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
+.cta-form input{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;padding:13px 18px;border-radius:12px;font-family:'Geist',sans-serif;font-size:15px;width:260px;outline:none;transition:border-color .15s}
+.cta-form input:focus{border-color:rgba(26,92,255,.7)}
+.cta-form input::placeholder{color:rgba(255,255,255,.28)}
+.cta-note{font-size:12px;color:rgba(255,255,255,.28)}
+
+/* FOOTER */
+footer{background:var(--ink);border-top:1px solid rgba(255,255,255,.07);padding:28px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.logo-f{font-weight:600;font-size:15px;color:rgba(255,255,255,.9)}
+.logo-f em{font-style:normal;color:var(--accent)}
+footer p{font-size:12.5px;color:rgba(255,255,255,.28)}
+.flags{font-size:17px;letter-spacing:4px}
+
+/* ANIM */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+.reveal.in{opacity:1;transform:none}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  nav{width:calc(100% - 32px);border-radius:16px}
+  .stats-bar{grid-template-columns:repeat(2,1fr)}
+  .stat-item:nth-child(2){border-right:none}
+  .stat-item:nth-child(3){border-top:1px solid var(--border)}
+  .feat-grid{grid-template-columns:1fr 1fr}
+  .price-grid{grid-template-columns:1fr 1fr}
+  .who-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  h1{font-size:38px}
+  .feat-grid{grid-template-columns:1fr}
+  .price-grid{grid-template-columns:1fr}
+  .who-grid{grid-template-columns:1fr}
+  .hero-form{flex-direction:column;align-items:center}
+  .hero-form input{width:100%;max-width:320px}
+  footer{padding:24px;flex-direction:column;text-align:center}
+}
 </style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
-  <div class="logo">BTO<span>Baltic</span></div>
-  <div style="display:flex;gap:28px;align-items:center;">
-    <a href="#kaip-veikia">Kaip veikia</a>
+  <span class="logo-nav">BTO<em>Baltic</em></span>
+  <div class="nav-links">
+    <a href="#palyginimas">Palyginimas</a>
     <a href="#kainos">Kainos</a>
-    <a href="#registracija" class="nav-cta">Gauti prieigą</a>
   </div>
+  <a href="#registracija" class="nav-cta">Gauti prieigą →</a>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-glow"></div>
-  <div class="hero-content">
-    <div class="badge">Pirmasis Baltijos B2B įrankis</div>
-    <h1>Rask <em>tiksliai</em> tą verslą kuriam nori parduoti</h1>
-    <p class="hero-sub">BTOBaltic – vienintelė Baltijos šalių B2B duomenų bazė su filtrais pagal industriją, miestą, apyvartą ir dydį. Apollo neveikia čia. Mes veikiame.</p>
-    <form class="hero-form" onsubmit="handleSignup(event, 'hero-thanks')">
-      <input type="email" placeholder="tavo@el.pastas.lt" required>
-      <button type="submit" class="btn-primary">Gauti ankstyvą prieigą →</button>
-    </form>
-    <p class="hero-note">Nemokama. Nereikia kortelės. Pirmiems 200 vartotojų.</p>
-    <p class="thank-you" id="hero-thanks">✓ Išsaugota! Pranešime kai paleisite.</p>
+<div class="hero">
+  <div class="blur1"></div>
+  <div class="blur2"></div>
+  <div class="eyebrow-pill">
+    <span class="dot">✦</span>
+    Pirmasis Baltijos B2B įrankis
   </div>
-</section>
-
-<!-- STATS -->
-<div class="stats">
-  <div class="stat fade-in">
-    <span class="stat-num">150k+</span>
-    <span class="stat-label">LT įmonių duomenys</span>
-  </div>
-  <div class="stat fade-in">
-    <span class="stat-num">3</span>
-    <span class="stat-label">Baltijos šalys</span>
-  </div>
-  <div class="stat fade-in">
-    <span class="stat-num">15+</span>
-    <span class="stat-label">Filtravimo kriterijų</span>
-  </div>
-  <div class="stat fade-in">
-    <span class="stat-num">€0</span>
-    <span class="stat-label">Pradžiai</span>
+  <h1>Rask <em>tiksliai</em> tą verslą<br>kuriam nori parduoti</h1>
+  <p class="hero-sub">Lietuva, Latvija, Estija — viena duomenų bazė. Apollo šiame regione neveikia. Mes sukurti specialiai jam.</p>
+  <form class="hero-form" onsubmit="signup(event,'hero-ok')">
+    <input type="email" placeholder="tavo@el.pastas.lt" required>
+    <button type="submit" class="btn-primary">Gauti ankstyvą prieigą →</button>
+  </form>
+  <p class="hero-note">Nemokama · Nereikia kortelės · Pirmiems 200 vartotojų</p>
+  <p class="thank-you" id="hero-ok">✓ Išsaugota! Pranešime kai paleisime.</p>
+  <div class="proof">
+    <div class="avatars">
+      <div class="av">A</div>
+      <div class="av">M</div>
+      <div class="av">T</div>
+    </div>
+    <div class="proof-text">
+      <span class="stars">★★★★★</span><br>
+      <strong>47 žmonės</strong> laukia ankstyvos prieigos
+    </div>
   </div>
 </div>
 
-<!-- PROBLEMA -->
-<section id="kaip-veikia">
-  <p class="section-tag">Problema</p>
-  <h2>Apollo.io Lietuvoje – beveik nenaudojamas</h2>
-  <p class="section-sub">Globalūs įrankiai nebuvo sukurti Baltijos rinkai. Mes buvojome.</p>
-  <div class="two-col fade-in">
-    <div class="col-panel bad">
-      <h3>❌ Apollo / ZoomInfo</h3>
-      <ul>
-        <li>Lietuvos duomenys – pasenę arba netikslūs</li>
-        <li>Nėra filtravimo pagal apyvartą ar miestą</li>
-        <li>Mokama $100+/mėn vien už bazę</li>
-        <li>Nepalaiko lietuviškų įmonių struktūros</li>
-        <li>GDPR problemos su ES duomenimis</li>
-      </ul>
+<div class="stats-bar">
+  <div class="stat-item reveal"><span class="stat-n">150k+</span><span class="stat-l">LT įmonių duomenys</span></div>
+  <div class="stat-item reveal"><span class="stat-n">3</span><span class="stat-l">Baltijos šalys</span></div>
+  <div class="stat-item reveal"><span class="stat-n">15+</span><span class="stat-l">Filtravimo kriterijų</span></div>
+  <div class="stat-item reveal"><span class="stat-n">€0</span><span class="stat-l">Pradžiai</span></div>
+</div>
+
+<div class="page-section" id="palyginimas">
+  <span class="eyebrow">Palyginimas</span>
+  <h2>Kodėl ne Apollo?</h2>
+  <p class="sec-sub">Globalūs įrankiai nebuvo sukurti mūsų regionui. Baltijos duomenys jiems — antraeilis dalykas.</p>
+  <div class="compare-wrap reveal">
+    <div class="cmp-head">
+      <div>Funkcija</div>
+      <div>Apollo / ZoomInfo</div>
+      <div>✦ BTOBaltic</div>
     </div>
-    <div class="col-panel good">
-      <h3>✓ BTOBaltic</h3>
-      <ul>
-        <li>Duomenys tiesiai iš Registrų centro – tikslu</li>
-        <li>Filtruok pagal miestą, EVRK, apyvartą, dydį</li>
-        <li>Nemokama versija – 20 eksportų/mėn</li>
-        <li>Suprojektuota Baltijos rinkai</li>
-        <li>GDPR compliant – vieši B2B duomenys</li>
-      </ul>
+    <div class="cmp-row"><div>LT/LV/EE duomenys</div><div><span class="no">✕</span> Prasti, pasenę</div><div><span class="ok">✓</span> Oficialūs registrai</div></div>
+    <div class="cmp-row"><div>Filtras pagal apyvartą</div><div><span class="no">✕</span> Nėra</div><div><span class="ok">✓</span> Taip</div></div>
+    <div class="cmp-row"><div>Filtras pagal miestą</div><div><span class="eh">~</span> Ribotas</div><div><span class="ok">✓</span> Tikslus</div></div>
+    <div class="cmp-row"><div>GDPR atitikimas</div><div><span class="eh">~</span> Rizikinga</div><div><span class="ok">✓</span> Vieši B2B duomenys</div></div>
+    <div class="cmp-row"><div>Mėnesio kaina</div><div><span class="no">✕</span> $99–$399</div><div><span class="ok">✓</span> Nuo €0</div></div>
+    <div class="cmp-row"><div>EVRK industrijos filtras</div><div><span class="no">✕</span> Nėra</div><div><span class="ok">✓</span> Tikslus LT/LV/EE kodas</div></div>
+  </div>
+</div>
+
+<div class="alt-bg">
+  <div class="inner">
+    <span class="eyebrow">Funkcionalumas</span>
+    <h2>Viskas ko reikia B2B prospecting'ui</h2>
+    <p class="sec-sub">Paprasta, greita ir tiksliai skirta Baltijos rinkai.</p>
+    <div class="feat-grid reveal">
+      <div class="feat-card"><span class="feat-num">01</span><h3>Tikslūs filtrai</h3><p>Industrija, miestas, darbuotojų sk., apyvarta, įmonės amžius. Rask tiksliai tą segmentą kurį ieškai.</p></div>
+      <div class="feat-card"><span class="feat-num">02</span><h3>Patikrinti kontaktai</h3><p>El. paštų verifikavimas ir tiesioginiai telefonai. Realūs kontaktai, ne spėjimai.</p></div>
+      <div class="feat-card"><span class="feat-num">03</span><h3>CSV eksportas</h3><p>Vienu paspaudimu eksportuok į HubSpot, Pipedrive, Instantly ar bet kurį CRM.</p></div>
+      <div class="feat-card"><span class="feat-num">04</span><h3>LT + LV + EE</h3><p>Lietuva, Latvija, Estija — vienas prisijungimas. Plečiamasi į Lenkiją ir CEE.</p></div>
+      <div class="feat-card"><span class="feat-num">05</span><h3>Aktualūs duomenys</h3><p>Automatinis sinchronizavimas su Registrų centru, UR.gov.lv ir Äriregister kas 30 dienų.</p></div>
+      <div class="feat-card"><span class="feat-num">06</span><h3>GDPR by design</h3><p>Visi duomenys iš oficialių viešų registrų. Legitimus interesas pagal GDPR 6(1)(f).</p></div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- FEATURES -->
-<section style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-  <p class="section-tag">Funkcionalumas</p>
-  <h2>Viskas ko reikia B2B prospecting'ui</h2>
-  <p class="section-sub">Paprasta, greita ir tiksliai skirta Baltijos rinkai.</p>
-  <div class="features-grid">
-    <div class="feature-card fade-in">
-      <div class="feature-icon">🎯</div>
-      <h3>Tikslūs filtrai</h3>
-      <p>Industrija (EVRK), miestas, darbuotojų sk., metinė apyvarta, įmonės amžius – rask tiksliai tą rinką kurią ieškai.</p>
-    </div>
-    <div class="feature-card fade-in">
-      <div class="feature-icon">📧</div>
-      <h3>El. paštai ir telefonai</h3>
-      <p>Patikrinti kontaktai su el. paštų verifikavimo sistema. Ne spėjimai – realūs kontaktai.</p>
-    </div>
-    <div class="feature-card fade-in">
-      <div class="feature-icon">📤</div>
-      <h3>CSV eksportas</h3>
-      <p>Eksportuok kontaktus tiesiai į savo CRM ar el. pašto įrankį. Vienas paspaudimas.</p>
-    </div>
-    <div class="feature-card fade-in">
-      <div class="feature-icon">🇱🇹🇱🇻🇪🇪</div>
-      <h3>LT + LV + EE</h3>
-      <p>Lietuva, Latvija, Estija – vienas įrankis visam Baltijos regionui.</p>
-    </div>
-    <div class="feature-card fade-in">
-      <div class="feature-icon">🔄</div>
-      <h3>Atnaujinti duomenys</h3>
-      <p>Automatinis sinchronizavimas su oficialiais registrais. Duomenys visada aktualūs.</p>
-    </div>
-    <div class="feature-card fade-in">
-      <div class="feature-icon">🔒</div>
-      <h3>GDPR atitikimas</h3>
-      <p>Visi duomenys iš viešų registrų. Legalu, saugu, be streso dėl atitikimo.</p>
-    </div>
-  </div>
-</section>
-
-<!-- KAS NAUDOJA -->
-<section>
-  <p class="section-tag">Tikslinė auditorija</p>
+<div class="page-section">
+  <span class="eyebrow">Tikslinė auditorija</span>
   <h2>Kam tai skirta?</h2>
-  <p class="section-sub">Bet kuriam B2B pardavėjui Baltijos regione.</p>
-  <div class="who-grid">
-    <div class="who-card fade-in">
-      <div class="who-icon">🏢</div>
-      <p>Rinkodaros agentūros</p>
-    </div>
-    <div class="who-card fade-in">
-      <div class="who-icon">📋</div>
-      <p>Buhalterinės įmonės</p>
-    </div>
-    <div class="who-card fade-in">
-      <div class="who-icon">🛡️</div>
-      <p>Draudimo brokeriai</p>
-    </div>
-    <div class="who-card fade-in">
-      <div class="who-icon">👥</div>
-      <p>Rekrutingo įmonės</p>
-    </div>
-    <div class="who-card fade-in">
-      <div class="who-icon">💻</div>
-      <p>B2B SaaS pardavėjai</p>
-    </div>
-    <div class="who-card fade-in">
-      <div class="who-icon">📦</div>
-      <p>Didmeninės prekybos įmonės</p>
+  <p class="sec-sub">Kiekvienam B2B pardavėjui ar agentūrai kurie dirba Baltijos rinkoje.</p>
+  <div class="who-grid reveal">
+    <div class="who-pill"><span>🏢</span> Rinkodaros agentūros</div>
+    <div class="who-pill"><span>📋</span> Buhalterinės įmonės</div>
+    <div class="who-pill"><span>🛡️</span> Draudimo brokeriai</div>
+    <div class="who-pill"><span>👥</span> Rekrutingo įmonės</div>
+    <div class="who-pill"><span>💻</span> B2B SaaS pardavėjai</div>
+    <div class="who-pill"><span>📦</span> Didmeninė prekyba</div>
+  </div>
+</div>
+
+<div class="alt-bg" id="kainos">
+  <div class="inner">
+    <span class="eyebrow">Kainos</span>
+    <h2>Paprasta kainodara</h2>
+    <p class="sec-sub">Pradėk nemokamai. Mokėk tik kai verslas auga. Jokių paslėptų mokesčių.</p>
+    <div class="price-grid reveal">
+      <div class="price-card">
+        <p class="plan-name">Free</p>
+        <div class="plan-price">€0<sub>/mėn</sub></div>
+        <p class="plan-period">Amžinai nemokama</p>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats"><li>20 eksportų per mėnesį</li><li>Visi filtrai</li><li>LT duomenų bazė</li><li>CSV eksportas</li></ul>
+        <button class="btn-plan" onclick="scroll2reg()">Pradėti nemokamai</button>
+      </div>
+      <div class="price-card hot">
+        <div class="hot-badge">Populiariausias</div>
+        <p class="plan-name">Starter</p>
+        <div class="plan-price">€29<sub>/mėn</sub></div>
+        <p class="plan-period">500 kontaktų per mėnesį</p>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats"><li>500 eksportų / mėn</li><li>LT + LV + EE</li><li>El. paštų verifikavimas</li><li>CRM integracija</li><li>Prioritetinis palaikymas</li></ul>
+        <button class="btn-plan" onclick="scroll2reg()">Gauti ankstyvą prieigą</button>
+      </div>
+      <div class="price-card">
+        <p class="plan-name">Pro</p>
+        <div class="plan-price">€79<sub>/mėn</sub></div>
+        <p class="plan-period">3 000 kontaktų per mėnesį</p>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats"><li>3 000 eksportų / mėn</li><li>Visos šalys + atnaujinimai</li><li>API prieiga</li><li>Intent signalai</li><li>Dedikuotas palaikymas</li></ul>
+        <button class="btn-plan" onclick="scroll2reg()">Gauti ankstyvą prieigą</button>
+      </div>
+      <div class="price-card">
+        <p class="plan-name">Agency</p>
+        <div class="plan-price">€199<sub>/mėn</sub></div>
+        <p class="plan-period">Unlimited kontaktai</p>
+        <div class="plan-divider"></div>
+        <ul class="plan-feats"><li>Unlimited eksportai</li><li>5 darbo vietos</li><li>White-label galimybė</li><li>SLA garantija</li><li>Individualus aptarnavimas</li></ul>
+        <button class="btn-plan" onclick="scroll2reg()">Susisiekti</button>
+      </div>
     </div>
   </div>
-</section>
+</div>
 
-<!-- PRICING -->
-<section id="kainos" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
-  <p class="section-tag">Kainos</p>
-  <h2>Paprasta ir sąžininga kainodara</h2>
-  <p class="section-sub">Pradėk nemokamai. Mokėk tik kai auga verslas.</p>
-  <div class="pricing-grid">
-    <div class="price-card fade-in">
-      <p class="price-name">Free</p>
-      <div class="price-amount">€0<span>/mėn</span></div>
-      <p class="price-period">Amžinai nemokama</p>
-      <div class="price-divider"></div>
-      <ul class="price-features">
-        <li>20 eksportų per mėnesį</li>
-        <li>Visi filtrai</li>
-        <li>LT duomenų bazė</li>
-        <li>CSV eksportas</li>
-      </ul>
-      <button class="btn-outline" onclick="scrollToSignup()">Pradėti nemokamai</button>
-    </div>
-    <div class="price-card featured fade-in">
-      <div class="price-badge">Populiariausias</div>
-      <p class="price-name">Starter</p>
-      <div class="price-amount">€29<span>/mėn</span></div>
-      <p class="price-period">500 kontaktų per mėnesį</p>
-      <div class="price-divider"></div>
-      <ul class="price-features">
-        <li>500 eksportų per mėnesį</li>
-        <li>LT + LV + EE</li>
-        <li>El. paštų verifikavimas</li>
-        <li>CRM integracija</li>
-        <li>Prioritetinis palaikymas</li>
-      </ul>
-      <button class="btn-outline" onclick="scrollToSignup()">Gauti ankstyvą prieigą</button>
-    </div>
-    <div class="price-card fade-in">
-      <p class="price-name">Pro</p>
-      <div class="price-amount">€79<span>/mėn</span></div>
-      <p class="price-period">3000 kontaktų per mėnesį</p>
-      <div class="price-divider"></div>
-      <ul class="price-features">
-        <li>3000 eksportų per mėnesį</li>
-        <li>Visos šalys + atnaujinimai</li>
-        <li>API prieiga</li>
-        <li>Intent signalai</li>
-        <li>Dedikuotas palaikymas</li>
-      </ul>
-      <button class="btn-outline" onclick="scrollToSignup()">Gauti ankstyvą prieigą</button>
-    </div>
-    <div class="price-card fade-in">
-      <p class="price-name">Agency</p>
-      <div class="price-amount">€199<span>/mėn</span></div>
-      <p class="price-period">Unlimited kontaktai</p>
-      <div class="price-divider"></div>
-      <ul class="price-features">
-        <li>Unlimited eksportai</li>
-        <li>5 darbo vietos</li>
-        <li>White-label galimybė</li>
-        <li>SLA garantija</li>
-        <li>Individualus aptarnavimas</li>
-      </ul>
-      <button class="btn-outline" onclick="scrollToSignup()">Susisiekti</button>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section class="cta-section" id="registracija">
-  <div class="cta-box fade-in">
-    <p class="section-tag" style="text-align:center;">Ankstyva prieiga</p>
-    <h2>Būk pirmasis. <em style="color:var(--accent)">Nemokamai.</em></h2>
-    <p>Pirmiems 200 registruotų vartotojų – nemokama prieiga paleidimo metu. Liko vietos.</p>
-    <form class="cta-form" onsubmit="handleSignup(event, 'cta-thanks')">
-      <input type="email" id="cta-email" placeholder="tavo@el.pastas.lt" required>
+<div class="cta-section" id="registracija">
+  <div class="cta-inner reveal">
+    <span class="eyebrow" style="color:rgba(255,255,255,.35)">Ankstyva prieiga</span>
+    <h2>Būk pirmasis.<br><em style="font-style:italic;color:var(--accent)">Nemokamai.</em></h2>
+    <p class="sec-sub" style="color:rgba(255,255,255,.45);margin:0 auto 36px;max-width:380px">Pirmiems 200 registruotų vartotojų — nemokama prieiga paleidimo metu.</p>
+    <form class="cta-form" onsubmit="signup(event,'cta-ok')">
+      <input type="email" placeholder="tavo@el.pastas.lt" required>
       <button type="submit" class="btn-primary">Rezervuoti vietą →</button>
     </form>
-    <p class="thank-you" id="cta-thanks">✓ Rezervuota! Susisieksime kai paleistu.</p>
-    <p style="font-size:13px;color:var(--muted);margin-top:16px;">Nereikia kortelės. Jokio spam'o. Atsisakyti galima bet kada.</p>
+    <p class="thank-you" id="cta-ok" style="color:rgba(255,255,255,.7)">✓ Rezervuota! Susisieksime kai paleisime.</p>
+    <p class="cta-note">Nereikia kortelės · Jokio spam'o · Atsisakyti galima bet kada</p>
   </div>
-</section>
+</div>
 
-<!-- FOOTER -->
 <footer>
-  <div class="logo">BTO<span>Baltic</span></div>
-  <div class="flags">🇱🇹 🇱🇻 🇪🇪</div>
-  <p>© 2025 BTOBaltic. Duomenys iš oficialių registrų.</p>
+  <span class="logo-f">BTO<em>Baltic</em></span>
+  <span class="flags">🇱🇹 🇱🇻 🇪🇪</span>
+  <p>© 2025 BTOBaltic · Duomenys iš oficialių registrų</p>
 </footer>
 
 <script>
-  // Fade in on scroll
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(el => {
-      if (el.isIntersecting) {
-        el.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
-  // Signup handler
-  function handleSignup(e, thankYouId) {
-    e.preventDefault();
-    const form = e.target;
-    const email = form.querySelector('input[type=email]').value;
-    // Here you'd send to your backend / Tally / etc.
-    form.style.display = 'none';
-    document.getElementById(thankYouId).style.display = 'block';
-    console.log('Signup:', email);
-  }
-
-  function scrollToSignup() {
-    document.getElementById('registracija').scrollIntoView({ behavior: 'smooth' });
-  }
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('in'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+function signup(e, id) {
+  e.preventDefault();
+  e.target.style.display = 'none';
+  document.getElementById(id).style.display = 'block';
+}
+function scroll2reg() {
+  document.getElementById('registracija').scrollIntoView({ behavior: 'smooth' });
+}
 </script>
 </body>
 </html>
